@@ -13,7 +13,9 @@ add_executable(client client.c
                 safe_socket.h
                 safe_socket.c
         client_request_handler.c
-        client_request_handler.h)
+        client_request_handler.h
+        data_structures/cJSON.c
+        data_structures/cJSON.h)
 
 add_executable(trie_test data_structures/pd_test.c
         data_structures/phone_directory.c

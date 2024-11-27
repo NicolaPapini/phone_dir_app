@@ -45,6 +45,6 @@ Status insert_contact(PhoneDirectory *phone_directory, char *name, char *surname
 Status delete_contact(PhoneDirectory *phone_directory, char *name, char *surname, char *phone_number);
 ListNode *search_contacts_by_prefix(PhoneDirectory *phone_directory, char *name, char *surname);
 Contact *search_contact_by_phone_number(PhoneDirectory *phone_directory, char *phone_number);
-Status update_contact(PhoneDirectory *phone_directory, char *name, char *surname, char *phone_number, char *new_phone_number);
+Status update_contact_number(PhoneDirectory *phone_directory, char *phone_number, char *new_phone_number);
 void free_phone_directory(PhoneDirectory *phone_directory);
 #endif //PHONE_DIRECTORY_H

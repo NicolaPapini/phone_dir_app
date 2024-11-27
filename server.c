@@ -3,7 +3,9 @@
 #include <pthread.h>
 #include "data_structures/queue.h"
 #include <signal.h>
-
+  #include <stdio.h>
+  #include <stdlib.h>
+  #include <unistd.h>
 #define THREAD_POOL_SIZE 10
 
 pthread_t threads[THREAD_POOL_SIZE];
@@ -11,18 +13,25 @@ volatile sig_atomic_t shutdown_flag = 0;
 pthread_mutex_t ready_queue_mutex = PTHREAD_MUTEX_INITIALIZER;
 pthread_mutex_t closeable_queue_mutex = PTHREAD_MUTEX_INITIALIZER;
 pthread_cond_t ready_queue_cond = PTHREAD_COND_INITIALIZER;
-
+int server_socket;
 
 Queue *ready_queue, *closeable_queue;
 
 int handle_connection(int socket);
 void close_closeable_sockets();
 void *thread_loop(void *args);
-void sigint_handler(int signum);
+void sigint_handler(int signo);
 
 int main() {
-    int server_socket;
-    //signal(SIGINT, sigint_handler);
+    /* Signal undefined behaviour when multithreading */
+
+    struct sigaction act = { 0 };
+    act.sa_handler = &sigint_handler;
+    if (sigaction(SIGINT, &act, NULL) == -1) {
+        perror("sigaction");
+        exit(EXIT_FAILURE);
+    }
+
     check(server_socket = create_server_socket(),
         "Error creating server socket");
 
@@ -30,6 +39,7 @@ int main() {
     closeable_queue = (Queue*) malloc(sizeof(Queue));
     init_queue(ready_queue);
     init_queue(closeable_queue);
+
 
     for (int i = 0; i < THREAD_POOL_SIZE; i++) {
         check(pthread_create(&threads[i], NULL, thread_loop, NULL),
@@ -46,7 +56,6 @@ int main() {
             break;
         }
 
-        //TODO: Find a way to avoid blocking accept with SIGINT
         int client_socket = accept_connection(server_socket);
         int *socket_ptr = (int*) malloc(sizeof(int));
         *socket_ptr = client_socket;
@@ -58,24 +67,16 @@ int main() {
         pthread_mutex_unlock(&ready_queue_mutex);
         printf("Connection %d added to ready queue\n", client_socket);
     }
-
-    close(server_socket);
-
-    for (int i = 0; i < THREAD_POOL_SIZE; i++) {
-        pthread_join(threads[i], NULL);
-    }
-
-    close_closeable_sockets();
-    printf("Freeing resources...\n");
-    free_queue(ready_queue);
-    printf("Ready queue freed\n");
-    free_queue(closeable_queue);
-    printf("Closeable queue freed\n");
-
     return EXIT_SUCCESS;
 }
 
 void *thread_loop(void *args) {
+
+    // Block SIGINT signal for threads
+    sigset_t set;
+    sigemptyset(&set);
+    sigaddset(&set, SIGINT);
+    pthread_sigmask(SIG_SETMASK, &set, NULL);
 
     fd_set worker_set, ready_set;
     int set_size = 0;
@@ -83,10 +84,10 @@ void *thread_loop(void *args) {
 
     while (!shutdown_flag) {
 
-        int *client_socket;
+        int *client_socket = NULL;
 
         pthread_mutex_lock(&ready_queue_mutex);
-        while ((client_socket = dequeue(ready_queue)) == NULL && set_size == 0) {
+        while (!shutdown_flag && (client_socket = dequeue(ready_queue)) == NULL && set_size == 0) {
             pthread_cond_wait(&ready_queue_cond, &ready_queue_mutex);
         }
         pthread_mutex_unlock(&ready_queue_mutex);
@@ -154,7 +155,7 @@ int handle_connection(int socket) {
 
     printf("Received: %s \n", buffer);
 
-    if (write_message(socket, buffer) < 0) {
+    if (write_message(socket, "Request received correctly \n\n") < 0) {
         printf("Error writing to client\n");
         free(buffer);
         return -1;
@@ -164,9 +165,25 @@ int handle_connection(int socket) {
     return 1;
 }
 
-void sigint_handler(int signum) {
+
+void sigint_handler (int signo){
     printf("Shutting down server...\n");
     shutdown_flag = 1;
+    close(server_socket);
     pthread_cond_broadcast(&ready_queue_cond);
+
+    for (int i = 0; i < THREAD_POOL_SIZE; i++) {
+        pthread_join(threads[i], NULL);
+    }
+
+    close_closeable_sockets();
+    printf("Freeing resources...\n");
+
+    free_queue(ready_queue);
+    printf("Ready queue freed\n");
+
+    free_queue(closeable_queue);
+    printf("Closeable queue freed\n");
+
     printf("Server shutdown\n");
 }

@@ -14,6 +14,18 @@
 #define PORT 8080
 #define SOCKET_ERROR -1
 #define BUFFER_SIZE 1024
+#define SERVER_PASSWORD "qwerty"
+#define NAME_SIZE 50
+#define SURNAME_SIZE 50
+#define NUMBER_SIZE 32
+
+typedef enum {
+    ADD_CONTACT,
+    DELETE_CONTACT,
+    UPDATE_CONTACT,
+    SEARCH_BY_PREFIX,
+    SEARCH_BY_NUMBER,
+} Operation;
 
 
 ssize_t write_message(int socket, char *buffer);

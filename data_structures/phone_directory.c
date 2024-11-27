@@ -199,10 +199,8 @@ Contact *search_contact_by_phone_number(PhoneDirectory *phone_directory, char *p
     return get(phone_directory->hash_map, phone_number);
 }
 
-Status update_contact(PhoneDirectory *phone_directory, char *name, char *surname, char *phone_number, char *new_phone_number) {
+Status update_contact_number(PhoneDirectory *phone_directory, char *phone_number, char *new_phone_number) {
     if (phone_directory == NULL ||
-        surname == NULL ||
-        name == NULL ||
         phone_number == NULL ||
         new_phone_number == NULL ||
         !is_numeric(phone_number) ||

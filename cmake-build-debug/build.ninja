@@ -110,6 +110,12 @@ build CMakeFiles/client.dir/client_request_handler.c.o: C_COMPILER__client_unsca
   OBJECT_DIR = CMakeFiles/client.dir
   OBJECT_FILE_DIR = CMakeFiles/client.dir
 
+build CMakeFiles/client.dir/data_structures/cJSON.c.o: C_COMPILER__client_unscanned_Debug /Users/nicola/CLionProjects/phone_dir_app/data_structures/cJSON.c || cmake_object_order_depends_target_client
+  DEP_FILE = CMakeFiles/client.dir/data_structures/cJSON.c.o.d
+  FLAGS = -g -std=gnu11 -arch arm64 -isysroot /Library/Developer/CommandLineTools/SDKs/MacOSX15.1.sdk -fcolor-diagnostics
+  OBJECT_DIR = CMakeFiles/client.dir
+  OBJECT_FILE_DIR = CMakeFiles/client.dir/data_structures
+
 
 # =============================================================================
 # Link build statements for EXECUTABLE target client
@@ -118,7 +124,7 @@ build CMakeFiles/client.dir/client_request_handler.c.o: C_COMPILER__client_unsca
 #############################################
 # Link the executable client
 
-build client: C_EXECUTABLE_LINKER__client_Debug CMakeFiles/client.dir/client.c.o CMakeFiles/client.dir/safe_socket.c.o CMakeFiles/client.dir/client_request_handler.c.o
+build client: C_EXECUTABLE_LINKER__client_Debug CMakeFiles/client.dir/client.c.o CMakeFiles/client.dir/safe_socket.c.o CMakeFiles/client.dir/client_request_handler.c.o CMakeFiles/client.dir/data_structures/cJSON.c.o
   FLAGS = -g -arch arm64 -isysroot /Library/Developer/CommandLineTools/SDKs/MacOSX15.1.sdk
   OBJECT_DIR = CMakeFiles/client.dir
   POST_BUILD = :
