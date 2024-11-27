@@ -104,6 +104,12 @@ build CMakeFiles/client.dir/safe_socket.c.o: C_COMPILER__client_unscanned_Debug 
   OBJECT_DIR = CMakeFiles/client.dir
   OBJECT_FILE_DIR = CMakeFiles/client.dir
 
+build CMakeFiles/client.dir/client_request_handler.c.o: C_COMPILER__client_unscanned_Debug /Users/nicola/CLionProjects/phone_dir_app/client_request_handler.c || cmake_object_order_depends_target_client
+  DEP_FILE = CMakeFiles/client.dir/client_request_handler.c.o.d
+  FLAGS = -g -std=gnu11 -arch arm64 -isysroot /Library/Developer/CommandLineTools/SDKs/MacOSX15.1.sdk -fcolor-diagnostics
+  OBJECT_DIR = CMakeFiles/client.dir
+  OBJECT_FILE_DIR = CMakeFiles/client.dir
+
 
 # =============================================================================
 # Link build statements for EXECUTABLE target client
@@ -112,13 +118,56 @@ build CMakeFiles/client.dir/safe_socket.c.o: C_COMPILER__client_unscanned_Debug 
 #############################################
 # Link the executable client
 
-build client: C_EXECUTABLE_LINKER__client_Debug CMakeFiles/client.dir/client.c.o CMakeFiles/client.dir/safe_socket.c.o
+build client: C_EXECUTABLE_LINKER__client_Debug CMakeFiles/client.dir/client.c.o CMakeFiles/client.dir/safe_socket.c.o CMakeFiles/client.dir/client_request_handler.c.o
   FLAGS = -g -arch arm64 -isysroot /Library/Developer/CommandLineTools/SDKs/MacOSX15.1.sdk
   OBJECT_DIR = CMakeFiles/client.dir
   POST_BUILD = :
   PRE_LINK = :
   TARGET_FILE = client
   TARGET_PDB = client.dbg
+
+# =============================================================================
+# Object build statements for EXECUTABLE target trie_test
+
+
+#############################################
+# Order-only phony target for trie_test
+
+build cmake_object_order_depends_target_trie_test: phony || .
+
+build CMakeFiles/trie_test.dir/data_structures/pd_test.c.o: C_COMPILER__trie_test_unscanned_Debug /Users/nicola/CLionProjects/phone_dir_app/data_structures/pd_test.c || cmake_object_order_depends_target_trie_test
+  DEP_FILE = CMakeFiles/trie_test.dir/data_structures/pd_test.c.o.d
+  FLAGS = -g -std=gnu11 -arch arm64 -isysroot /Library/Developer/CommandLineTools/SDKs/MacOSX15.1.sdk -fcolor-diagnostics
+  OBJECT_DIR = CMakeFiles/trie_test.dir
+  OBJECT_FILE_DIR = CMakeFiles/trie_test.dir/data_structures
+
+build CMakeFiles/trie_test.dir/data_structures/phone_directory.c.o: C_COMPILER__trie_test_unscanned_Debug /Users/nicola/CLionProjects/phone_dir_app/data_structures/phone_directory.c || cmake_object_order_depends_target_trie_test
+  DEP_FILE = CMakeFiles/trie_test.dir/data_structures/phone_directory.c.o.d
+  FLAGS = -g -std=gnu11 -arch arm64 -isysroot /Library/Developer/CommandLineTools/SDKs/MacOSX15.1.sdk -fcolor-diagnostics
+  OBJECT_DIR = CMakeFiles/trie_test.dir
+  OBJECT_FILE_DIR = CMakeFiles/trie_test.dir/data_structures
+
+build CMakeFiles/trie_test.dir/data_structures/hash_map.c.o: C_COMPILER__trie_test_unscanned_Debug /Users/nicola/CLionProjects/phone_dir_app/data_structures/hash_map.c || cmake_object_order_depends_target_trie_test
+  DEP_FILE = CMakeFiles/trie_test.dir/data_structures/hash_map.c.o.d
+  FLAGS = -g -std=gnu11 -arch arm64 -isysroot /Library/Developer/CommandLineTools/SDKs/MacOSX15.1.sdk -fcolor-diagnostics
+  OBJECT_DIR = CMakeFiles/trie_test.dir
+  OBJECT_FILE_DIR = CMakeFiles/trie_test.dir/data_structures
+
+
+# =============================================================================
+# Link build statements for EXECUTABLE target trie_test
+
+
+#############################################
+# Link the executable trie_test
+
+build trie_test: C_EXECUTABLE_LINKER__trie_test_Debug CMakeFiles/trie_test.dir/data_structures/pd_test.c.o CMakeFiles/trie_test.dir/data_structures/phone_directory.c.o CMakeFiles/trie_test.dir/data_structures/hash_map.c.o
+  FLAGS = -g -arch arm64 -isysroot /Library/Developer/CommandLineTools/SDKs/MacOSX15.1.sdk
+  OBJECT_DIR = CMakeFiles/trie_test.dir
+  POST_BUILD = :
+  PRE_LINK = :
+  TARGET_FILE = trie_test
+  TARGET_PDB = trie_test.dbg
 
 
 #############################################
@@ -154,7 +203,7 @@ build rebuild_cache: phony CMakeFiles/rebuild_cache.util
 #############################################
 # Folder: /Users/nicola/CLionProjects/phone_dir_app/cmake-build-debug
 
-build all: phony server client
+build all: phony server client trie_test
 
 # =============================================================================
 # Built-in targets

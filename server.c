@@ -22,7 +22,7 @@ void sigint_handler(int signum);
 
 int main() {
     int server_socket;
-    signal(SIGINT, sigint_handler);
+    //signal(SIGINT, sigint_handler);
     check(server_socket = create_server_socket(),
         "Error creating server socket");
 

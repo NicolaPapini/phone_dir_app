@@ -11,5 +11,12 @@ add_executable( server server.c
 
 add_executable(client client.c
                 safe_socket.h
-                safe_socket.c)
+                safe_socket.c
+        client_request_handler.c
+        client_request_handler.h)
 
+add_executable(trie_test data_structures/pd_test.c
+        data_structures/phone_directory.c
+        data_structures/phone_directory.h
+        data_structures/hash_map.c
+        data_structures/hash_map.h)
