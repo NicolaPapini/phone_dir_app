@@ -36,9 +36,3 @@ add_executable(client client.c
                 connection_utils.h
         server_response_parser.c
         server_response_parser.h)
-
-add_executable(trie_test data_structures/pd_test.c
-        data_structures/phone_directory.c
-        data_structures/phone_directory.h
-        data_structures/hash_map.c
-        data_structures/hash_map.h)

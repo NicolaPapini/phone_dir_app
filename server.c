@@ -28,7 +28,7 @@ void sigint_handler(int sig_num);
 
 int main() {
     phone_directory = create_phone_directory();
-    deserialize(phone_directory);
+    //deserialize(phone_directory);
     /* Signal undefined behaviour when multithreading */
     struct sigaction act = { 0 };
     act.sa_handler = &sigint_handler;
@@ -138,7 +138,7 @@ void close_closeable_sockets() {
 }
 
 void sigint_handler (int sig_num){
-    printf("Shutting down server...\n");
+    printf("Shutting down server...\n\n");
     shutdown_flag = 1;
     close(server_socket);
     pthread_cond_broadcast(&ready_queue_cond);
@@ -152,11 +152,11 @@ void sigint_handler (int sig_num){
         printf("Error saving phone directory. Retrying...\n");
         sleep(2);
     }
-    printf("Phone directory saved\n");
+    printf("Phone directory saved\n\n");
 
     printf("Closing server socket...\n");
     close_closeable_sockets();
-    printf("Server socket closed\n");
+    printf("Server socket closed\n\n");
 
     printf("Freeing resources...\n");
 
@@ -167,7 +167,7 @@ void sigint_handler (int sig_num){
     printf("Closeable queue freed\n");
 
     free_phone_directory(phone_directory);
-    printf("Phone directory freed\n");
+    printf("Phone directory freed\n\n");
 
     printf("Server shutdown\n");
 }

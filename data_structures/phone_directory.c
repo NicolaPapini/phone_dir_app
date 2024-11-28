@@ -251,10 +251,10 @@ char *standardize(char *name, char *surname) {
     int len = strlen(name) + strlen(surname) + 1;
     char *standardized = (char*) malloc(sizeof(char) * (len + 1));
     int i = 0;
-    for (int j = 0; surname[j]; j++) {
+    for (int j = 0; j < strlen(surname); j++) {
         standardized[i++] = tolower(surname[j]);
     }
-    for (int j = 0; name[j]; j++) {
+    for (int j = 0; j < strlen(name); j++) {
         standardized[i++] = tolower(name[j]);
     }
     standardized[i] = '\0';
