@@ -19,7 +19,9 @@ add_executable( server server.c
         common_utils.c
         common_utils.h
         connection_utils.c
-        connection_utils.h)
+        connection_utils.h
+        serialization.c
+        serialization.h)
 
 add_executable(client client.c
                 safe_socket.h
@@ -31,7 +33,9 @@ add_executable(client client.c
                 common_utils.c
                 common_utils.h
                 connection_utils.c
-                connection_utils.h)
+                connection_utils.h
+        server_response_parser.c
+        server_response_parser.h)
 
 add_executable(trie_test data_structures/pd_test.c
         data_structures/phone_directory.c

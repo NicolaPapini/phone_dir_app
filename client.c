@@ -5,6 +5,8 @@
 
 #include "client_request_handler.h"
 #include "safe_socket.h"
+#include "server_response_parser.h"
+#include "data_structures/cJSON.h"
 
 int main(int arc, char *argv[]) {
     if (arc != 2) {
@@ -20,7 +22,8 @@ int main(int arc, char *argv[]) {
     printf("Welcome to the phone directory application!\n\n");
 
     do {
-        printf("Enter the corresponding desired operation number:\n\n"
+        printf("\n==============================================================================================\n");
+        printf("Enter the number corresponding to the desired operation:\n\n"
                "1. Add a new contact\n"
                "2. Remove a contact\n"
                "3. Update a contact number\n"
@@ -46,9 +49,10 @@ int main(int arc, char *argv[]) {
             authenticated = true;
         }
         handle_request(operation, client_socket);
-        printf("Request sent\n");
-        read_message(client_socket, buffer);
-        printf("Server response: %s\n\n", buffer);
+        char *response = calloc(BUFFER_SIZE, sizeof(char));
+        read_message(client_socket, response);
+        cJSON *response_json = cJSON_Parse(response);
+        parse_response(response_json);
     } while (true);
 
     printf("Closing connection\n");

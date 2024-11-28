@@ -9,6 +9,8 @@
 
 #include "common_utils.h"
 #include "server_connection_handler.h"
+#include "serialization.h"
+
 #define THREAD_POOL_SIZE 10
 
 int server_socket;
@@ -26,8 +28,8 @@ void sigint_handler(int sig_num);
 
 int main() {
     phone_directory = create_phone_directory();
+    deserialize(phone_directory);
     /* Signal undefined behaviour when multithreading */
-
     struct sigaction act = { 0 };
     act.sa_handler = &sigint_handler;
     if (sigaction(SIGINT, &act, NULL) == -1) {
@@ -63,12 +65,12 @@ int main() {
         int *socket_ptr = (int*) malloc(sizeof(int));
         *socket_ptr = client_socket;
 
-        printf("Connection received from %d\n", client_socket);
+        printf("Connection received from socket %d\n", client_socket);
         pthread_mutex_lock(&ready_queue_mutex);
         enqueue(ready_queue, socket_ptr);
         pthread_cond_signal(&ready_queue_cond);
         pthread_mutex_unlock(&ready_queue_mutex);
-        printf("Connection %d added to ready queue\n", client_socket);
+        printf("Connection %d added to the ready queue\n", client_socket);
     }
     return EXIT_SUCCESS;
 }
@@ -145,7 +147,17 @@ void sigint_handler (int sig_num){
         pthread_join(threads[i], NULL);
     }
 
+    printf("Saving phone directory...\n");
+    while (!serialize(phone_directory)) {
+        printf("Error saving phone directory. Retrying...\n");
+        sleep(2);
+    }
+    printf("Phone directory saved\n");
+
+    printf("Closing server socket...\n");
     close_closeable_sockets();
+    printf("Server socket closed\n");
+
     printf("Freeing resources...\n");
 
     free_queue(ready_queue);

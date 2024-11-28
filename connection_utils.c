@@ -143,7 +143,6 @@ void build_JSON_request(char *buffer, char *operation, char *name, char *surname
         cJSON_AddStringToObject(request, "new_number", new_number);
     }
     strcpy(buffer, cJSON_PrintUnformatted(request));
-    printf("Request: %s\n", buffer);
     cJSON_Delete(request);
 }
 

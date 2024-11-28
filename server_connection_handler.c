@@ -15,7 +15,6 @@ void server_search_by_prefix(cJSON *request, char *response, PhoneDirectory *pho
 void server_search_by_number(cJSON *request, char *response, PhoneDirectory *phone_dir);
 
 int handle_connection(int client_socket, PhoneDirectory *phone_dir) {
-    printf("Entered handle connection \n");
     char *recvline = calloc(BUFFER_SIZE, sizeof(char));
     ssize_t msg_size = read_message(client_socket, recvline);
 
@@ -31,7 +30,7 @@ int handle_connection(int client_socket, PhoneDirectory *phone_dir) {
         return 0;
     }
 
-    printf("Received: %s \n", recvline);
+    printf("Received request from socket %d: %s \n", client_socket, recvline);
     cJSON *request = cJSON_Parse(recvline);
     cJSON *operation_json = cJSON_GetObjectItem(request, "operation");
     Operation operation;
@@ -40,35 +39,25 @@ int handle_connection(int client_socket, PhoneDirectory *phone_dir) {
 
     switch (operation) {
         case ADD_CONTACT:
-            printf("Adding contact\n");
             server_add(request, response, phone_dir);
-            printf("Ended adding contact\n");
             break;
         case DELETE_CONTACT:
-            printf("Deleting contact\n");
             server_delete(request, response, phone_dir);
-            printf("Ended deleting contact\n");
             break;
         case UPDATE_CONTACT:
-            printf("Updating contact\n");
             server_update(request, response, phone_dir);
-            printf("Ended updating contact\n");
             break;
         case SEARCH_BY_PREFIX:
-            printf("Searching by prefix\n");
             server_search_by_prefix(request, response, phone_dir);
-            printf("Ended searching by prefix\n");
             break;
         case SEARCH_BY_NUMBER:
-            printf("Searching by number\n");
             server_search_by_number(request, response, phone_dir);
-            printf("Ended searching by number\n");
             break;
         default:
             printf("Invalid operation\n");
             exit(EXIT_FAILURE);
     }
-    printf("Response: %s\n", response);
+    printf("Response for socket %d: %s\n", client_socket, response);
     if (write_message(client_socket, response) < 0) {
         printf("Error writing to client\n");
         free(recvline);

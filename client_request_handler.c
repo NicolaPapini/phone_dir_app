@@ -14,10 +14,9 @@ void client_search_by_prefix(char *buffer);
 void client_search_by_number(char *buffer);
 
 void authentication_procedure() {
-    printf("Authentication required to modify the directory.\n");
+    printf("Authentication required to modify the directory. Enter the server password:\n");
     while (true) {
         char buffer[BUFFER_SIZE];
-        printf("Enter the server password:\n");
         scanf("%s", buffer);
         while (getchar() != '\n') {};
         if (strcmp(buffer, SERVER_PASSWORD) == 0) {
@@ -32,23 +31,18 @@ void handle_request(int operation, int client_socket) {
     char *buffer = calloc(BUFFER_SIZE, sizeof(char));
     switch (operation-1) {
         case ADD_CONTACT:
-            printf("Add contact procedure\n");
             client_add(buffer);
             break;
         case DELETE_CONTACT:
-            printf("Delete contact procedure\n");
             client_delete(buffer);
             break;
         case UPDATE_CONTACT:
-            printf("Update contact procedure\n");
             client_update(buffer);
             break;
         case SEARCH_BY_PREFIX:
-            printf("Search by prefix procedure\n");
             client_search_by_prefix(buffer);
             break;
         case SEARCH_BY_NUMBER:
-            printf("Search by number procedure\n");
             client_search_by_number(buffer);
             break;
         default:
