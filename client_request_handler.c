@@ -1,6 +1,10 @@
 #include "client_request_handler.h"
 #include "data_structures/cJSON.h"
 #include <stdbool.h>
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+#include "connection_utils.h"
 #include "safe_socket.h"
 
 void client_add(char *buffer);
@@ -8,10 +12,6 @@ void client_delete(char *buffer);
 void client_update(char *buffer);
 void client_search_by_prefix(char *buffer);
 void client_search_by_number(char *buffer);
-
-void get_input(char *buffer, int size);
-void prompt_fields(char *name, char *surname, char*number, char *new_number);
-void build_JSON_request(char *buffer, char *operation, char *name, char *surname, char *number, char *new_number);
 
 void authentication_procedure() {
     printf("Authentication required to modify the directory.\n");
@@ -29,7 +29,7 @@ void authentication_procedure() {
 }
 
 void handle_request(int operation, int client_socket) {
-    char *buffer = malloc(sizeof(char) * BUFFER_SIZE);
+    char *buffer = calloc(BUFFER_SIZE, sizeof(char));
     switch (operation-1) {
         case ADD_CONTACT:
             printf("Add contact procedure\n");
@@ -53,7 +53,6 @@ void handle_request(int operation, int client_socket) {
             break;
         default:
             printf("Invalid operation\n");
-            //TODO: handle invalid operation
             exit(EXIT_FAILURE);
     }
     write_message(client_socket, buffer);
@@ -88,50 +87,4 @@ void client_search_by_number(char *buffer) {
     char number[NUMBER_SIZE];
     prompt_fields(NULL, NULL, number, NULL);
     build_JSON_request(buffer, "SEARCH_BY_NUMBER", NULL, NULL, number, NULL);
-}
-
-//TODO: check if using NAME_SIZE, SURNAME_SIZE, NUMBER_SIZE is correct
-void prompt_fields(char *name, char *surname, char *number, char *new_number) {
-    if (name != NULL) {
-        printf("Enter the name:\n");
-        get_input(name, NAME_SIZE);
-    }
-    if (surname != NULL) {
-        printf("Enter the surname:\n");
-        get_input(surname, SURNAME_SIZE);
-    }
-    if (number != NULL) {
-        printf("Enter the number:\n");
-        get_input(number, NUMBER_SIZE);
-    }
-    if (new_number != NULL) {
-        printf("Enter the new number:\n");
-        get_input(new_number, NUMBER_SIZE);
-    }
-}
-
-void build_JSON_request(char *buffer, char *operation, char *name, char *surname, char *number, char *new_number) {
-    cJSON *request = cJSON_CreateObject();
-    cJSON_AddStringToObject(request, "operation", operation);
-
-    if (name != NULL) {
-        cJSON_AddStringToObject(request, "name", name);
-    }
-    if (surname != NULL) {
-        cJSON_AddStringToObject(request, "surname", surname);
-    }
-    if (number != NULL) {
-        cJSON_AddStringToObject(request, "number", number);
-    }
-    if (new_number != NULL) {
-        cJSON_AddStringToObject(request, "new_number", new_number);
-    }
-    strcpy(buffer, cJSON_PrintUnformatted(request));
-    printf("Request: %s\n", buffer);
-    cJSON_Delete(request);
-}
-
-void get_input(char *buffer, int size) {
-    fgets(buffer, size, stdin);
-    buffer[strcspn(buffer, "\n")] = '\0';
 }

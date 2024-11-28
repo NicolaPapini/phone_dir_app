@@ -7,9 +7,8 @@
 #define ALPHABET_SIZE 27
 #define ALPHABET "abcdefghijklmnopqrstuvwxyz "
 
-//TODO Implement ListNode instead of Contact
+typedef struct HashMap HashMap;
 
-struct HashMap;
 typedef struct Contact{
     char *name;
     char *surname;

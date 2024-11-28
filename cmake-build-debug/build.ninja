@@ -67,6 +67,42 @@ build CMakeFiles/server.dir/safe_socket.c.o: C_COMPILER__server_unscanned_Debug 
   OBJECT_DIR = CMakeFiles/server.dir
   OBJECT_FILE_DIR = CMakeFiles/server.dir
 
+build CMakeFiles/server.dir/server_connection_handler.c.o: C_COMPILER__server_unscanned_Debug /Users/nicola/CLionProjects/phone_dir_app/server_connection_handler.c || cmake_object_order_depends_target_server
+  DEP_FILE = CMakeFiles/server.dir/server_connection_handler.c.o.d
+  FLAGS = -g -std=gnu11 -arch arm64 -isysroot /Library/Developer/CommandLineTools/SDKs/MacOSX15.1.sdk -fcolor-diagnostics
+  OBJECT_DIR = CMakeFiles/server.dir
+  OBJECT_FILE_DIR = CMakeFiles/server.dir
+
+build CMakeFiles/server.dir/data_structures/cJSON.c.o: C_COMPILER__server_unscanned_Debug /Users/nicola/CLionProjects/phone_dir_app/data_structures/cJSON.c || cmake_object_order_depends_target_server
+  DEP_FILE = CMakeFiles/server.dir/data_structures/cJSON.c.o.d
+  FLAGS = -g -std=gnu11 -arch arm64 -isysroot /Library/Developer/CommandLineTools/SDKs/MacOSX15.1.sdk -fcolor-diagnostics
+  OBJECT_DIR = CMakeFiles/server.dir
+  OBJECT_FILE_DIR = CMakeFiles/server.dir/data_structures
+
+build CMakeFiles/server.dir/data_structures/phone_directory.c.o: C_COMPILER__server_unscanned_Debug /Users/nicola/CLionProjects/phone_dir_app/data_structures/phone_directory.c || cmake_object_order_depends_target_server
+  DEP_FILE = CMakeFiles/server.dir/data_structures/phone_directory.c.o.d
+  FLAGS = -g -std=gnu11 -arch arm64 -isysroot /Library/Developer/CommandLineTools/SDKs/MacOSX15.1.sdk -fcolor-diagnostics
+  OBJECT_DIR = CMakeFiles/server.dir
+  OBJECT_FILE_DIR = CMakeFiles/server.dir/data_structures
+
+build CMakeFiles/server.dir/data_structures/hash_map.c.o: C_COMPILER__server_unscanned_Debug /Users/nicola/CLionProjects/phone_dir_app/data_structures/hash_map.c || cmake_object_order_depends_target_server
+  DEP_FILE = CMakeFiles/server.dir/data_structures/hash_map.c.o.d
+  FLAGS = -g -std=gnu11 -arch arm64 -isysroot /Library/Developer/CommandLineTools/SDKs/MacOSX15.1.sdk -fcolor-diagnostics
+  OBJECT_DIR = CMakeFiles/server.dir
+  OBJECT_FILE_DIR = CMakeFiles/server.dir/data_structures
+
+build CMakeFiles/server.dir/common_utils.c.o: C_COMPILER__server_unscanned_Debug /Users/nicola/CLionProjects/phone_dir_app/common_utils.c || cmake_object_order_depends_target_server
+  DEP_FILE = CMakeFiles/server.dir/common_utils.c.o.d
+  FLAGS = -g -std=gnu11 -arch arm64 -isysroot /Library/Developer/CommandLineTools/SDKs/MacOSX15.1.sdk -fcolor-diagnostics
+  OBJECT_DIR = CMakeFiles/server.dir
+  OBJECT_FILE_DIR = CMakeFiles/server.dir
+
+build CMakeFiles/server.dir/connection_utils.c.o: C_COMPILER__server_unscanned_Debug /Users/nicola/CLionProjects/phone_dir_app/connection_utils.c || cmake_object_order_depends_target_server
+  DEP_FILE = CMakeFiles/server.dir/connection_utils.c.o.d
+  FLAGS = -g -std=gnu11 -arch arm64 -isysroot /Library/Developer/CommandLineTools/SDKs/MacOSX15.1.sdk -fcolor-diagnostics
+  OBJECT_DIR = CMakeFiles/server.dir
+  OBJECT_FILE_DIR = CMakeFiles/server.dir
+
 
 # =============================================================================
 # Link build statements for EXECUTABLE target server
@@ -75,7 +111,7 @@ build CMakeFiles/server.dir/safe_socket.c.o: C_COMPILER__server_unscanned_Debug 
 #############################################
 # Link the executable server
 
-build server: C_EXECUTABLE_LINKER__server_Debug CMakeFiles/server.dir/server.c.o CMakeFiles/server.dir/data_structures/queue.c.o CMakeFiles/server.dir/safe_socket.c.o
+build server: C_EXECUTABLE_LINKER__server_Debug CMakeFiles/server.dir/server.c.o CMakeFiles/server.dir/data_structures/queue.c.o CMakeFiles/server.dir/safe_socket.c.o CMakeFiles/server.dir/server_connection_handler.c.o CMakeFiles/server.dir/data_structures/cJSON.c.o CMakeFiles/server.dir/data_structures/phone_directory.c.o CMakeFiles/server.dir/data_structures/hash_map.c.o CMakeFiles/server.dir/common_utils.c.o CMakeFiles/server.dir/connection_utils.c.o
   FLAGS = -g -arch arm64 -isysroot /Library/Developer/CommandLineTools/SDKs/MacOSX15.1.sdk
   OBJECT_DIR = CMakeFiles/server.dir
   POST_BUILD = :
@@ -116,6 +152,18 @@ build CMakeFiles/client.dir/data_structures/cJSON.c.o: C_COMPILER__client_unscan
   OBJECT_DIR = CMakeFiles/client.dir
   OBJECT_FILE_DIR = CMakeFiles/client.dir/data_structures
 
+build CMakeFiles/client.dir/common_utils.c.o: C_COMPILER__client_unscanned_Debug /Users/nicola/CLionProjects/phone_dir_app/common_utils.c || cmake_object_order_depends_target_client
+  DEP_FILE = CMakeFiles/client.dir/common_utils.c.o.d
+  FLAGS = -g -std=gnu11 -arch arm64 -isysroot /Library/Developer/CommandLineTools/SDKs/MacOSX15.1.sdk -fcolor-diagnostics
+  OBJECT_DIR = CMakeFiles/client.dir
+  OBJECT_FILE_DIR = CMakeFiles/client.dir
+
+build CMakeFiles/client.dir/connection_utils.c.o: C_COMPILER__client_unscanned_Debug /Users/nicola/CLionProjects/phone_dir_app/connection_utils.c || cmake_object_order_depends_target_client
+  DEP_FILE = CMakeFiles/client.dir/connection_utils.c.o.d
+  FLAGS = -g -std=gnu11 -arch arm64 -isysroot /Library/Developer/CommandLineTools/SDKs/MacOSX15.1.sdk -fcolor-diagnostics
+  OBJECT_DIR = CMakeFiles/client.dir
+  OBJECT_FILE_DIR = CMakeFiles/client.dir
+
 
 # =============================================================================
 # Link build statements for EXECUTABLE target client
@@ -124,7 +172,7 @@ build CMakeFiles/client.dir/data_structures/cJSON.c.o: C_COMPILER__client_unscan
 #############################################
 # Link the executable client
 
-build client: C_EXECUTABLE_LINKER__client_Debug CMakeFiles/client.dir/client.c.o CMakeFiles/client.dir/safe_socket.c.o CMakeFiles/client.dir/client_request_handler.c.o CMakeFiles/client.dir/data_structures/cJSON.c.o
+build client: C_EXECUTABLE_LINKER__client_Debug CMakeFiles/client.dir/client.c.o CMakeFiles/client.dir/safe_socket.c.o CMakeFiles/client.dir/client_request_handler.c.o CMakeFiles/client.dir/data_structures/cJSON.c.o CMakeFiles/client.dir/common_utils.c.o CMakeFiles/client.dir/connection_utils.c.o
   FLAGS = -g -arch arm64 -isysroot /Library/Developer/CommandLineTools/SDKs/MacOSX15.1.sdk
   OBJECT_DIR = CMakeFiles/client.dir
   POST_BUILD = :

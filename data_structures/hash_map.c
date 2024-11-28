@@ -1,9 +1,31 @@
 #include "hash_map.h"
+
+#include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
 
 int hash(char *key, int capacity);
 void rehash(HashMap *hash_map);
+
+void print_hash_map(HashMap *hash_map) {
+    if (hash_map == NULL) {
+        printf("Hash map is NULL\n");
+        return;
+    }
+
+    for (int i = 0; i < hash_map->capacity; i++) {
+
+        ListNode *current = hash_map->buckets[i];
+        if (current != NULL) {
+            printf("Bucket %d: ", i);
+            while (current != NULL) {
+                printf("-> [Name: %s, Surname: %s, Number: %s] ", current->contact->name, current->contact->surname, current->contact->phone_number);
+                current = current->next;
+            }
+            printf("\n");
+        }
+    }
+}
 
 /*###################### Constructors ###################### */
 HashMap *create_hash_map() {
@@ -23,6 +45,8 @@ int hash(char *key, int capacity) {
     long hash_value = strtol(key, &end_ptr, 10);
     return (int) (hash_value % capacity);
 }
+
+//TODO: maybe rehash when the load factor is too low
 
 void rehash(HashMap *hash_map) {
     int new_capacity = hash_map->capacity * 2;
@@ -70,7 +94,6 @@ struct Contact *get(HashMap *hash_map, char *key) {
     if (hash_map == NULL || key == NULL) {
         return NULL;
     }
-
     int bucket = hash(key, hash_map->capacity);
     ListNode *current = hash_map->buckets[bucket];
     while (current != NULL) {
@@ -106,4 +129,19 @@ void remove_entry(HashMap *map, char *key) {
     }
 }
 
-//TODO: Implement free_hash_map
+void free_hash_map(HashMap *hash_map) {
+    if (hash_map == NULL) {
+        return;
+    }
+
+    for (int i = 0; i < hash_map->capacity; i++) {
+        ListNode *current = hash_map->buckets[i];
+        while (current != NULL) {
+            ListNode *next = current->next;
+            free(current);
+            current = next;
+        }
+    }
+    free(hash_map->buckets);
+    free(hash_map);
+}

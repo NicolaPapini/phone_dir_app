@@ -5,7 +5,8 @@
 #define INITIAL_CAPACITY 16
 #define MAX_LOAD_FACTOR 0.75
 
-struct ListNode;
+typedef struct Contact Contact;
+typedef struct ListNode ListNode;
 
 typedef struct HashMap {
     int size;

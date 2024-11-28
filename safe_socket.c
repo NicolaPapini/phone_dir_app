@@ -1,29 +1,35 @@
 #include "safe_socket.h"
-#define MESSAGE_TERMINATOR '\n'
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+#include <unistd.h>
+#include <netinet/in.h>
+#include <arpa/inet.h>
 
-//TODO Modify the read_message and write_message functions to fit with the JSON format
+#include "common_utils.h"
+#define MESSAGE_TERMINATOR '}'
+
 ssize_t write_message(int socket, char *buffer) {
-    size_t len = strlen(buffer);
-    char *terminated_buffer = malloc(len + 2);  // +2 for newline and null terminator
-    strcpy(terminated_buffer, buffer);
-    terminated_buffer[len] = MESSAGE_TERMINATOR;
-    terminated_buffer[len + 1] = '\0';
-
-    ssize_t total_size = len + 1;  // Include the terminator
+    ssize_t total_size = strlen(buffer);
     ssize_t msg_size = 0;
     ssize_t bytes_written;
 
+    // Send the message length first (4 bytes)
+    uint32_t message_length = htonl(total_size); // Convert to network byte order
+    if (write(socket, &message_length, sizeof(message_length)) != sizeof(message_length)) {
+        perror("write length");
+        return -1;
+    }
+
+    // Send the actual message
     while (msg_size < total_size) {
-        bytes_written = write(socket, terminated_buffer + msg_size, total_size - msg_size);
+        bytes_written = write(socket, buffer + msg_size, total_size - msg_size);
         if (bytes_written < 0) {
             perror("write");
-            free(terminated_buffer);
             return -1;
         }
         msg_size += bytes_written;
     }
-
-    free(terminated_buffer);
     return msg_size;
 }
 
@@ -31,36 +37,37 @@ ssize_t read_message(int socket, char *buffer) {
     ssize_t msg_size = 0;
     ssize_t bytes_read;
 
-    while (msg_size < BUFFER_SIZE - 1) {
-        bytes_read = read(socket, buffer + msg_size, 1);  // Read one byte at a time
+    // Read the 4-byte length prefix
+    uint32_t message_length;
+    if (read(socket, &message_length, sizeof(message_length)) != sizeof(message_length)) {
+        perror("read length");
+        return -1;
+    }
+    message_length = ntohl(message_length); // Convert from network byte order
 
+    if (message_length > BUFFER_SIZE - 1) {
+        fprintf(stderr, "Message length exceeds buffer size\n");
+        return -1;
+    }
+
+    // Read the actual message
+    while (msg_size < message_length) {
+        bytes_read = read(socket, buffer + msg_size, message_length - msg_size);
         if (bytes_read < 0) {
             perror("read");
             return -1;
+        } else if (bytes_read == 0) {
+            fprintf(stderr, "Connection closed unexpectedly\n");
+            return -1;
         }
-
-        if (bytes_read == 0) {  // Connection closed by peer
-            return 0;
-        }
-
-        if (buffer[msg_size] == MESSAGE_TERMINATOR) {
-            buffer[msg_size] = '\0';  // Replace terminator with null
-            return msg_size;
-        }
-
         msg_size += bytes_read;
     }
 
-    buffer[msg_size] = '\0';  // Ensure null termination
+    buffer[msg_size] = '\0'; // Null-terminate the string
+
     return msg_size;
 }
 
-void check(int value, char *msg) {
-    if (value == SOCKET_ERROR) {
-        perror(msg);
-        exit(EXIT_FAILURE);
-    }
-}
 
 struct sockaddr_in create_addr_struct(const char *ip_address) {
     struct sockaddr_in addr;

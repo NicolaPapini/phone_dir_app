@@ -3,26 +3,29 @@
 #include <pthread.h>
 #include "data_structures/queue.h"
 #include <signal.h>
-  #include <stdio.h>
-  #include <stdlib.h>
-  #include <unistd.h>
+#include <stdio.h>
+#include <stdlib.h>
+#include <unistd.h>
+
+#include "common_utils.h"
+#include "server_connection_handler.h"
 #define THREAD_POOL_SIZE 10
 
+int server_socket;
+PhoneDirectory *phone_directory = NULL;
 pthread_t threads[THREAD_POOL_SIZE];
 volatile sig_atomic_t shutdown_flag = 0;
 pthread_mutex_t ready_queue_mutex = PTHREAD_MUTEX_INITIALIZER;
 pthread_mutex_t closeable_queue_mutex = PTHREAD_MUTEX_INITIALIZER;
 pthread_cond_t ready_queue_cond = PTHREAD_COND_INITIALIZER;
-int server_socket;
-
 Queue *ready_queue, *closeable_queue;
 
-int handle_connection(int socket);
 void close_closeable_sockets();
 void *thread_loop(void *args);
-void sigint_handler(int signo);
+void sigint_handler(int sig_num);
 
 int main() {
+    phone_directory = create_phone_directory();
     /* Signal undefined behaviour when multithreading */
 
     struct sigaction act = { 0 };
@@ -108,7 +111,7 @@ void *thread_loop(void *args) {
                 int *socket = (int*) malloc(sizeof(int));
                 *socket = i;
                 printf("Handling connection %d in thread %p\n", i, pthread_self());
-                if (handle_connection(*socket) <= 0) {
+                if (handle_connection(*socket, phone_directory) <= 0) {
                     pthread_mutex_lock(&closeable_queue_mutex);
                     enqueue(closeable_queue, socket);
                     pthread_mutex_unlock(&closeable_queue_mutex);
@@ -132,41 +135,7 @@ void close_closeable_sockets() {
     pthread_mutex_unlock(&closeable_queue_mutex);
 }
 
-int handle_connection(int socket) {
-    char *buffer = malloc(BUFFER_SIZE);
-    if (!buffer) {
-        perror("malloc");
-        return -1;
-    }
-
-    ssize_t msg_size = read_message(socket, buffer);
-
-    if (msg_size < 0) {
-        printf("Error reading from client\n");
-        free(buffer);
-        return -1;
-    }
-
-    if (msg_size == 0) {
-        printf("Client disconnected\n");
-        free(buffer);
-        return 0;
-    }
-
-    printf("Received: %s \n", buffer);
-
-    if (write_message(socket, "Request received correctly \n\n") < 0) {
-        printf("Error writing to client\n");
-        free(buffer);
-        return -1;
-    }
-
-    free(buffer);
-    return 1;
-}
-
-
-void sigint_handler (int signo){
+void sigint_handler (int sig_num){
     printf("Shutting down server...\n");
     shutdown_flag = 1;
     close(server_socket);
@@ -184,6 +153,9 @@ void sigint_handler (int signo){
 
     free_queue(closeable_queue);
     printf("Closeable queue freed\n");
+
+    free_phone_directory(phone_directory);
+    printf("Phone directory freed\n");
 
     printf("Server shutdown\n");
 }

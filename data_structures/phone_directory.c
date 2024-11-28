@@ -4,11 +4,12 @@
 #include <ctype.h>
 #include <string.h>
 
-bool is_numeric(char *number);
-char *standardize(char *name, char *surname);
-int get_index(char c);
-void find_contacts_with_same_prefix(TrieNode *node, ListNode **result_list);
 bool isEmpty(TrieNode node);
+int get_index(char c);
+char *standardize(char *name, char *surname);
+void free_trie(TrieNode *node);
+void find_contacts_with_same_prefix(TrieNode *node, ListNode **result_list);
+
 
 /*###################### Constructors ###################### */
 TrieNode *create_trie_node() {
@@ -23,9 +24,9 @@ TrieNode *create_trie_node() {
 
 Contact *create_contact(char *name, char *surname, char *phone_number) {
     Contact *contact = (Contact*) malloc(sizeof(Contact));
-    contact->name = name;
-    contact->surname = surname;
-    contact->phone_number = phone_number;
+    contact->name = strdup(name);
+    contact->surname = strdup(surname);
+    contact->phone_number = strdup(phone_number);
     return contact;
 }
 
@@ -44,12 +45,11 @@ ListNode *create_list_node(Contact *contact) {
 }
 
 /*####################### Functions ####################### */
-Status insert_contact(PhoneDirectory *phone_directory, char *surname, char *name, char *phone_number) {
+Status insert_contact(PhoneDirectory *phone_directory, char *name, char *surname, char *phone_number) {
     if (phone_directory == NULL ||
         surname == NULL ||
         name == NULL ||
-        phone_number == NULL ||
-        !is_numeric(phone_number)) {
+        phone_number == NULL) {
         return INVALID_INPUT;
     }
 
@@ -89,7 +89,7 @@ Status insert_contact(PhoneDirectory *phone_directory, char *surname, char *name
 
 Status delete_contact(PhoneDirectory *phone_dir, char *name, char *surname, char *phone_number) {
 
-    if (phone_dir == NULL || surname == NULL || name == NULL || phone_number == NULL || !is_numeric(phone_number)) {
+    if (phone_dir == NULL || surname == NULL || name == NULL || phone_number == NULL) {
         return INVALID_INPUT;
     }
 
@@ -106,11 +106,13 @@ Status delete_contact(PhoneDirectory *phone_dir, char *name, char *surname, char
     // Traverse the Trie
     for (int i = 0; i < strlen(standardized_name); i++) {
         int index = get_index(standardized_name[i]);
+
         //TODO: this is redundant
         if (current->children[index] == NULL) {
             free(standardized_name);
             return RECORD_NOT_FOUND;
         }
+
         stack[stack_index] = current;       // Push current node to stack
         stack_indices[stack_index++] = index; // Push current index to stack_indices
         current = current->children[index];
@@ -193,7 +195,7 @@ ListNode *search_contacts_by_prefix(PhoneDirectory *phone_directory, char *name,
 }
 
 Contact *search_contact_by_phone_number(PhoneDirectory *phone_directory, char *phone_number) {
-    if (phone_directory == NULL || phone_number == NULL || !is_numeric(phone_number)) {
+    if (phone_directory == NULL || phone_number == NULL) {
         return NULL;
     }
     return get(phone_directory->hash_map, phone_number);
@@ -202,9 +204,7 @@ Contact *search_contact_by_phone_number(PhoneDirectory *phone_directory, char *p
 Status update_contact_number(PhoneDirectory *phone_directory, char *phone_number, char *new_phone_number) {
     if (phone_directory == NULL ||
         phone_number == NULL ||
-        new_phone_number == NULL ||
-        !is_numeric(phone_number) ||
-        !is_numeric(new_phone_number)) {
+        new_phone_number == NULL) {
         return INVALID_INPUT;
     }
 
@@ -213,24 +213,39 @@ Status update_contact_number(PhoneDirectory *phone_directory, char *phone_number
         return RECORD_NOT_FOUND;
     }
     remove_entry(phone_directory->hash_map, phone_number);
-    contact->phone_number = new_phone_number;
+    contact->phone_number = strdup(new_phone_number);
     put_entry(phone_directory->hash_map, contact);
     return SUCCESS;
 }
 
-void free_phone_directory(PhoneDirectory *phone_directory) {}
-    //TODO implement freeing of the trie
-    //TODO implement freeing of the hashmap
-/*###################### Helpers ###################### */
-
-bool is_numeric(char *number) {
-    for (int i = 0; number[i] != '\0'; i++) {
-        if (!isdigit(number[i])) {
-            return false;
-        }
+void free_phone_directory(PhoneDirectory *phone_directory) {
+    if (phone_directory == NULL) {
+        return;
     }
-    return true;
+    free_trie(phone_directory->root);
+    free_hash_map(phone_directory->hash_map);
+    free(phone_directory);
 }
+void free_trie(TrieNode *node) {
+    if (node == NULL) {
+        return;
+    }
+    for (int i = 0; i < ALPHABET_SIZE; i++) {
+        free_trie(node->children[i]);
+    }
+    ListNode *current = node->head;
+    while (current != NULL) {
+        ListNode *next = current->next;
+        free(current->contact->name);
+        free(current->contact->surname);
+        free(current->contact->phone_number);
+        free(current->contact);
+        free(current);
+        current = next;
+    }
+    free(node);
+}
+/*###################### Helpers ###################### */
 
 char *standardize(char *name, char *surname) {
     int len = strlen(name) + strlen(surname) + 1;
@@ -253,17 +268,6 @@ int get_index(char c) {
     return c - 'a';
 }
 
-//TODO: Remember to free the memory allocated for the new list
-/*
-void free_list_nodes(ListNode *head) {
-    ListNode *current = head;
-    while (current != NULL) {
-        ListNode *next = current->next;
-        free(current);
-        current = next;
-    }
-}
-*/
 void find_contacts_with_same_prefix(TrieNode *node, ListNode **result_list) {
     if (node == NULL) {
         return;
@@ -283,7 +287,6 @@ void find_contacts_with_same_prefix(TrieNode *node, ListNode **result_list) {
 }
 
 bool isEmpty(TrieNode node) {
-
     for (int i = 0; i < ALPHABET_SIZE; i++) {
         if (node.children[i] != NULL) {
             return false;

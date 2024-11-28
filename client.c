@@ -1,4 +1,7 @@
 #include <stdbool.h>
+#include <stdio.h>
+#include <stdlib.h>
+#include <unistd.h>
 
 #include "client_request_handler.h"
 #include "safe_socket.h"
@@ -43,6 +46,7 @@ int main(int arc, char *argv[]) {
             authenticated = true;
         }
         handle_request(operation, client_socket);
+        printf("Request sent\n");
         read_message(client_socket, buffer);
         printf("Server response: %s\n\n", buffer);
     } while (true);
