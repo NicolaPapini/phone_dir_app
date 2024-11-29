@@ -38,7 +38,7 @@ int main(int arc, char *argv[]) {
                 printf("Invalid input. Please enter a valid number.\n");
             }
 
-        } while (*end_ptr != '\0' && *end_ptr != '\n' || operation < 1 || operation > 6);
+        } while ((*end_ptr != '\0' && *end_ptr != '\n') || operation < 1 || operation > 6);
 
         if (operation == 6) {
             break;

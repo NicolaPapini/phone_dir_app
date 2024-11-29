@@ -25,15 +25,13 @@ void enqueue(Queue *queue, int *client_socket) {
 int *dequeue(Queue *queue) {
     if (queue->head == NULL) {
         return NULL;
-    } else {
-        int* result = queue->head->client_socket;
-        Node *temp = queue->head;
-        queue->head = queue->head->next;
-        if (queue->head == NULL) {
-            queue->tail = NULL;
-        }
-        return result;
     }
+    int* result = queue->head->client_socket;
+    queue->head = queue->head->next;
+    if (queue->head == NULL) {
+        queue->tail = NULL;
+    }
+    return result;
 }
 
 void free_queue(Queue *queue) {
