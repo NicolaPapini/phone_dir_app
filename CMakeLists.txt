@@ -4,35 +4,20 @@ project(phone_dir_app C)
 set(CMAKE_C_STANDARD 11)
 
 add_executable( server server.c
-        data_structures/queue.h
-        data_structures/queue.c
-        safe_socket.h
         safe_socket.c
-        server_connection_handler.c
-        server_connection_handler.h
-        data_structures/cJSON.c
-        data_structures/cJSON.h
-        data_structures/phone_directory.c
-        data_structures/phone_directory.h
-        data_structures/hash_map.c
-        data_structures/hash_map.h
         common_utils.c
-        common_utils.h
         connection_utils.c
-        connection_utils.h
+        server_connection_handler.c
         serialization.c
-        serialization.h)
+        data_structures/cJSON.c
+        data_structures/queue.c
+        data_structures/phone_directory.c
+        data_structures/hash_map.c)
 
 add_executable(client client.c
-                safe_socket.h
                 safe_socket.c
                 client_request_handler.c
-                client_request_handler.h
                 data_structures/cJSON.c
-                data_structures/cJSON.h
                 common_utils.c
-                common_utils.h
                 connection_utils.c
-                connection_utils.h
-        server_response_parser.c
-        server_response_parser.h)
+        server_response_parser.c)

@@ -1,11 +1,10 @@
-#include "client_request_handler.h"
-#include "data_structures/cJSON.h"
 #include <stdbool.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
 #include "connection_utils.h"
 #include "safe_socket.h"
+#include "client_request_handler.h"
 
 void client_add(char *buffer);
 void client_delete(char *buffer);

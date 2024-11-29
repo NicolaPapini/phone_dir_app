@@ -1,5 +1,5 @@
 #include "hash_map.h"
-
+#include "phone_directory.h"
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -91,7 +91,7 @@ void put_entry(HashMap *hash_map, Contact *value) {
     }
 }
 
-struct Contact *get(HashMap *hash_map, char *key) {
+Contact *get(HashMap *hash_map, char *key) {
     if (hash_map == NULL || key == NULL) {
         return NULL;
     }

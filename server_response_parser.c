@@ -1,8 +1,6 @@
-#include "server_response_parser.h"
-
 #include <stdio.h>
 #include <string.h>
-
+#include "server_response_parser.h"
 #include "connection_utils.h"
 
 void print_contact(cJSON *contact);

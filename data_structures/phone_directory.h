@@ -7,7 +7,7 @@
 #define ALPHABET_SIZE 27
 #define ALPHABET "abcdefghijklmnopqrstuvwxyz "
 
-typedef struct HashMap HashMap;
+typedef HashMap HashMap;
 
 typedef struct Contact{
     char *name;
@@ -17,7 +17,7 @@ typedef struct Contact{
 
 typedef struct ListNode {
     Contact *contact;
-    struct ListNode *next;
+    ListNode *next;
 } ListNode;
 
 typedef struct TrieNode {
@@ -28,7 +28,7 @@ typedef struct TrieNode {
 
 typedef struct PhoneDirectory{
     TrieNode *root;
-    struct HashMap *hash_map;
+    HashMap *hash_map;
 } PhoneDirectory;
 
 typedef enum Status {

@@ -1,4 +1,3 @@
-#include "server_connection_handler.h"
 #include <pthread.h>
 #include <stdio.h>
 #include <stdlib.h>
@@ -6,6 +5,7 @@
 #include "common_utils.h"
 #include "connection_utils.h"
 #include "safe_socket.h"
+#include "server_connection_handler.h"
 
 pthread_rwlock_t phone_dir_rwlock = PTHREAD_RWLOCK_INITIALIZER;
 

@@ -1,15 +1,14 @@
-#include "safe_socket.h"
 #include <sys/select.h>
 #include <pthread.h>
-#include "data_structures/queue.h"
 #include <signal.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <unistd.h>
-
-#include "common_utils.h"
+#include "safe_socket.h"
 #include "server_connection_handler.h"
+#include "common_utils.h"
 #include "serialization.h"
+#include "data_structures/queue.h"
 
 #define THREAD_POOL_SIZE 10
 
