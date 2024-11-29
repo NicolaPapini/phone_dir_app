@@ -1,63 +1,22 @@
-# Compiler and flags
-CC = gcc
-CFLAGS = -g -Wall -std=gnu11
+SERVER_SOURCES = server.c safe_socket.c server_connection_handler.c \
+                 common_utils.c connection_utils.c serialization.c \
+                 data_structures/queue.c data_structures/cJSON.c \
+                 data_structures/phone_directory.c data_structures/hash_map.c
 
-# Directories
-SRC_DIR = .
-DATA_STRUCTURES_DIR = $(SRC_DIR)/data_structures
-BUILD_DIR = build
+CLIENT_SOURCES = client.c safe_socket.c client_request_handler.c \
+                 common_utils.c connection_utils.c \
+                 server_response_parser.c data_structures/cJSON.c
 
-# Source files
-SERVER_SOURCES = $(SRC_DIR)/server.c \
-                $(SRC_DIR)/safe_socket.c \
-                $(SRC_DIR)/server_connection_handler.c \
-                $(SRC_DIR)/common_utils.c \
-                $(SRC_DIR)/connection_utils.c \
-                $(SRC_DIR)/serialization.c \
-                $(DATA_STRUCTURES_DIR)/queue.c \
-                $(DATA_STRUCTURES_DIR)/cJSON.c \
-                $(DATA_STRUCTURES_DIR)/phone_directory.c \
-                $(DATA_STRUCTURES_DIR)/hash_map.c
+all: server client
 
-CLIENT_SOURCES = $(SRC_DIR)/client.c \
-                $(SRC_DIR)/safe_socket.c \
-                $(SRC_DIR)/client_request_handler.c \
-                $(SRC_DIR)/common_utils.c \
-                $(SRC_DIR)/connection_utils.c \
-                $(SRC_DIR)/server_response_parser.c \
-                $(DATA_STRUCTURES_DIR)/cJSON.c
 
-# Object files (in build directory)
-SERVER_OBJECTS = $(SERVER_SOURCES:%.c=$(BUILD_DIR)/%.o)
-CLIENT_OBJECTS = $(CLIENT_SOURCES:%.c=$(BUILD_DIR)/%.o)
+server: $(SERVER_SOURCES)
+	gcc -Wall -std=gnu11 -o server $(SERVER_SOURCES)
 
-# Executables
-SERVER = $(BUILD_DIR)/server
-CLIENT = $(BUILD_DIR)/client
-
-# Include directories
-INCLUDES = -I$(SRC_DIR) -I$(DATA_STRUCTURES_DIR)
-
-# Targets
-all: init $(SERVER) $(CLIENT)
-
-# Initialize build directory structure
-init:
-	@mkdir -p $(BUILD_DIR)
-	@mkdir -p $(BUILD_DIR)/$(DATA_STRUCTURES_DIR)
-
-$(SERVER): $(SERVER_OBJECTS)
-	$(CC) $(CFLAGS) -o $@ $^
-
-$(CLIENT): $(CLIENT_OBJECTS)
-	$(CC) $(CFLAGS) -o $@ $^
-
-# Pattern rule for object files
-$(BUILD_DIR)/%.o: %.c
-	@mkdir -p $(dir $@)
-	$(CC) $(CFLAGS) $(INCLUDES) -c $< -o $@
+client: $(CLIENT_SOURCES)
+	gcc -Wall -std=gnu11 -o client $(CLIENT_SOURCES)
 
 clean:
-	rm -rf $(BUILD_DIR)
+	rm -f server client
 
-.PHONY: all clean init
+.PHONY: all clean
