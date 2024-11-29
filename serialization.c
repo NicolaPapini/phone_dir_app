@@ -50,6 +50,7 @@ bool serialize_trie(FILE *file, TrieNode *node) {
             char *entry = create_db_entry(current->contact);
             fwrite(entry, strlen(entry), 1, file);
             current = current->next;
+            free(entry);
         }
     }
     return true;

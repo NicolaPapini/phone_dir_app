@@ -52,7 +52,8 @@ ssize_t read_message(int socket, char *buffer) {
         if (bytes_read < 0) {
             perror("read");
             return -1;
-        } else if (bytes_read == 0) {
+        }
+        if (bytes_read == 0) {
             fprintf(stderr, "Connection closed unexpectedly\n");
             return -1;
         }

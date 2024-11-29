@@ -17,11 +17,11 @@ int main(int arc, char *argv[]) {
     bool authenticated = false;
     int client_socket = create_client_socket(argv[1]);
     char *end_ptr;
-    char buffer[BUFFER_SIZE];
 
     printf("Welcome to the phone directory application!\n\n");
 
     do {
+        char buffer[BUFFER_SIZE];
         printf("\n==============================================================================================\n");
         printf("Enter the number corresponding to the desired operation:\n\n"
                "1. Add a new contact\n"

@@ -10,17 +10,20 @@ void free_list_nodes(ListNode * head);
 Operation get_operation(char *operation) {
     if (strcmp(operation, "ADD_CONTACT") == 0) {
         return ADD_CONTACT;
-    } else if (strcmp(operation, "DELETE_CONTACT") == 0) {
-        return DELETE_CONTACT;
-    } else if (strcmp(operation, "UPDATE_CONTACT") == 0) {
-        return UPDATE_CONTACT;
-    } else if (strcmp(operation, "SEARCH_BY_PREFIX") == 0) {
-        return SEARCH_BY_PREFIX;
-    } else if (strcmp(operation, "SEARCH_BY_NUMBER") == 0) {
-        return SEARCH_BY_NUMBER;
-    } else {
-        return -1;
     }
+    if (strcmp(operation, "DELETE_CONTACT") == 0) {
+        return DELETE_CONTACT;
+    }
+    if (strcmp(operation, "UPDATE_CONTACT") == 0) {
+        return UPDATE_CONTACT;
+    }
+    if (strcmp(operation, "SEARCH_BY_PREFIX") == 0) {
+        return SEARCH_BY_PREFIX;
+    }
+    if (strcmp(operation, "SEARCH_BY_NUMBER") == 0) {
+        return SEARCH_BY_NUMBER;
+    }
+    return -1;
 }
 
 void get_fields(cJSON *request, char *name, char *surname, char *number, char *new_number) {
@@ -68,7 +71,7 @@ void add_result_to_response(cJSON *response, Status result) {
     cJSON_AddStringToObject(response, "result", to_be_added);
 }
 
-void create_multiple_entry_jSON(cJSON *response, ListNode *result) {
+void create_multiple_entry_jSON(cJSON *json, ListNode *result) {
     ListNode *head = result;
     cJSON *jSON_array = cJSON_CreateArray();
     while (result != NULL) {
@@ -79,7 +82,7 @@ void create_multiple_entry_jSON(cJSON *response, ListNode *result) {
         cJSON_AddItemToArray(jSON_array, entry);
         result = result->next;
     }
-    cJSON_AddItemToObject(response, "contacts", jSON_array);
+    cJSON_AddItemToObject(json, "contacts", jSON_array);
     free_list_nodes(head);
 }
 
@@ -146,7 +149,7 @@ void build_JSON_request(char *buffer, char *operation, char *name, char *surname
     cJSON_Delete(request);
 }
 
-void get_input(char *buffer, int size) {
-    fgets(buffer, size, stdin);
-    buffer[strcspn(buffer, "\n")] = '\0';
+void get_input(char *input, int size) {
+    fgets(input, size, stdin);
+    input[strcspn(input, "\n")] = '\0';
 }
