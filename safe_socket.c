@@ -7,21 +7,18 @@
 #include <arpa/inet.h>
 
 #include "common_utils.h"
-#define MESSAGE_TERMINATOR '}'
 
 ssize_t write_message(int socket, char *buffer) {
     ssize_t total_size = strlen(buffer);
     ssize_t msg_size = 0;
     ssize_t bytes_written;
 
-    // Send the message length first (4 bytes)
-    uint32_t message_length = htonl(total_size); // Convert to network byte order
+    uint32_t message_length = htonl(total_size);
     if (write(socket, &message_length, sizeof(message_length)) != sizeof(message_length)) {
         perror("write length");
         return -1;
     }
 
-    // Send the actual message
     while (msg_size < total_size) {
         bytes_written = write(socket, buffer + msg_size, total_size - msg_size);
         if (bytes_written < 0) {
@@ -43,14 +40,13 @@ ssize_t read_message(int socket, char *buffer) {
         perror("read length");
         return -1;
     }
-    message_length = ntohl(message_length); // Convert from network byte order
+    message_length = ntohl(message_length);
 
     if (message_length > BUFFER_SIZE - 1) {
         fprintf(stderr, "Message length exceeds buffer size\n");
         return -1;
     }
 
-    // Read the actual message
     while (msg_size < message_length) {
         bytes_read = read(socket, buffer + msg_size, message_length - msg_size);
         if (bytes_read < 0) {
@@ -63,7 +59,7 @@ ssize_t read_message(int socket, char *buffer) {
         msg_size += bytes_read;
     }
 
-    buffer[msg_size] = '\0'; // Null-terminate the string
+    buffer[msg_size] = '\0';
 
     return msg_size;
 }

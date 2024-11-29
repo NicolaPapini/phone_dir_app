@@ -60,8 +60,9 @@ void rehash(HashMap *hash_map) {
         ListNode *current = hash_map->buckets[i];
         while (current != NULL) {
             ListNode *next = current->next;
-            put_entry(hash_map, current->contact);
-            free(current);
+            int new_bucket = hash(current->contact->phone_number, new_capacity);
+            current->next = new_buckets[new_bucket];
+            new_buckets[new_bucket] = current;
             current = next;
         }
     }

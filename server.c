@@ -28,7 +28,7 @@ void sigint_handler(int sig_num);
 
 int main() {
     phone_directory = create_phone_directory();
-    //deserialize(phone_directory);
+    deserialize(phone_directory);
     /* Signal undefined behaviour when multithreading */
     struct sigaction act = { 0 };
     act.sa_handler = &sigint_handler;

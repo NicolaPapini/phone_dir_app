@@ -7,9 +7,9 @@
 #define PORT 8080
 #define BUFFER_SIZE 4096
 #define SERVER_PASSWORD "qwerty"
-#define NAME_SIZE 50
-#define SURNAME_SIZE 50
-#define NUMBER_SIZE 32
+#define NAME_SIZE 60
+#define SURNAME_SIZE 60
+#define NUMBER_SIZE 60
 
 typedef enum {
     ADD_CONTACT,
