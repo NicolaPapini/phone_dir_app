@@ -9,7 +9,6 @@
 
 pthread_rwlock_t phone_dir_rwlock = PTHREAD_RWLOCK_INITIALIZER;
 
-
 void server_add(cJSON *request, char *response, PhoneDirectory *phone_dir);
 void server_delete(cJSON *request, char *response, PhoneDirectory *phone_dir);
 void server_update(cJSON *request, char *response, PhoneDirectory *phone_dir);

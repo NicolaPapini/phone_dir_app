@@ -41,7 +41,6 @@ void strip_whitespaces(char *str) {
 
     *(end + 1) = '\0';
 
-    // Move the stripped string back to the original buffer
     if (start != str) {
         memmove(str, start, end - start + 2); // +2 to include null terminator
     }

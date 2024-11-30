@@ -13,12 +13,13 @@ ssize_t write_message(int socket, char *buffer) {
     ssize_t msg_size = 0;
     ssize_t bytes_written;
 
+    // Write the 4-byte length prefix
     uint32_t message_length = htonl(total_size);
     if (write(socket, &message_length, sizeof(message_length)) != sizeof(message_length)) {
         perror("write length");
         return -1;
     }
-
+    // Write the message
     while (msg_size < total_size) {
         bytes_written = write(socket, buffer + msg_size, total_size - msg_size);
         if (bytes_written < 0) {
@@ -46,7 +47,7 @@ ssize_t read_message(int socket, char *buffer) {
         fprintf(stderr, "Message length exceeds buffer size\n");
         return -1;
     }
-
+    // Read the message
     while (msg_size < message_length) {
         bytes_read = read(socket, buffer + msg_size, message_length - msg_size);
         if (bytes_read < 0) {

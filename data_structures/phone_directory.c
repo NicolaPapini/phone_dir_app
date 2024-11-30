@@ -1,8 +1,8 @@
-#include "phone_directory.h"
 #include <stdlib.h>
 #include <stdio.h>
 #include <ctype.h>
 #include <string.h>
+#include "phone_directory.h"
 
 bool isEmpty(TrieNode node);
 int get_index(char c);
@@ -88,8 +88,10 @@ Status insert_contact(PhoneDirectory *phone_directory, char *name, char *surname
 }
 
 Status delete_contact(PhoneDirectory *phone_dir, char *name, char *surname, char *phone_number) {
-
-    if (phone_dir == NULL || surname == NULL || name == NULL || phone_number == NULL) {
+    if (phone_dir == NULL ||
+        surname == NULL ||
+        name == NULL ||
+        phone_number == NULL) {
         return INVALID_INPUT;
     }
 
@@ -103,26 +105,14 @@ Status delete_contact(PhoneDirectory *phone_dir, char *name, char *surname, char
     int stack_indices[strlen(standardized_name)];
     int stack_index = 0;
 
-    // Traverse the Trie
     for (int i = 0; i < strlen(standardized_name); i++) {
         int index = get_index(standardized_name[i]);
-
-        //TODO: this is redundant
-        if (current->children[index] == NULL) {
-            free(standardized_name);
-            return RECORD_NOT_FOUND;
-        }
-
-        stack[stack_index] = current;       // Push current node to stack
-        stack_indices[stack_index++] = index; // Push current index to stack_indices
+        stack[stack_index] = current;
+        stack_indices[stack_index++] = index;
         current = current->children[index];
     }
 
     free(standardized_name);
-    //TODO: this is redundant
-    if (!current->is_end_of_word) {
-        return RECORD_NOT_FOUND;
-    }
 
     // Remove the contact from the linked list
     ListNode *temp = current->head;
@@ -138,7 +128,7 @@ Status delete_contact(PhoneDirectory *phone_dir, char *name, char *surname, char
             remove_entry(phone_dir->hash_map, phone_number);
             free(temp->contact);
             free(temp);
-            // If no more contacts, mark as not end of word
+
             if (current->head == NULL) {
                 current->is_end_of_word = false;
             }
@@ -148,21 +138,16 @@ Status delete_contact(PhoneDirectory *phone_dir, char *name, char *surname, char
         temp = temp->next;
     }
 
-    // If the phone number was not found in the linked list
-    if (temp == NULL) {
-        return RECORD_NOT_FOUND;
-    }
-
     // Backtrack to clean up the Trie
     for (int i = stack_index - 1; i >= 0; i--) {
-        int child_index = stack_indices[i]; // Retrieve index of the current child
+        int child_index = stack_indices[i];
         TrieNode *parent = stack[i];
 
         if (isEmpty(*current) && !current->is_end_of_word) {
-            free(current);                  // Free the empty TrieNode
-            parent->children[child_index] = NULL; // Remove reference in the parent node
+            free(current);
+            parent->children[child_index] = NULL;
         } else {
-            break; // Stop backtracking if current node has children or is an end-of-word
+            break;
         }
         current = parent;
     }
@@ -170,7 +155,9 @@ Status delete_contact(PhoneDirectory *phone_dir, char *name, char *surname, char
 }
 
 ListNode *search_contacts_by_prefix(PhoneDirectory *phone_directory, char *name, char *surname) {
-    if (phone_directory == NULL || surname == NULL || name == NULL) {
+    if (phone_directory == NULL ||
+        surname == NULL ||
+        name == NULL) {
         return NULL;
     }
 

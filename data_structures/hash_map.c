@@ -46,8 +46,6 @@ int hash(char *key, int capacity) {
     return (int) (hash_value % capacity);
 }
 
-//TODO: maybe rehash when the load factor is too low
-
 void rehash(HashMap *hash_map) {
     int new_capacity = hash_map->capacity * 2;
     ListNode **new_buckets = (ListNode**) malloc(sizeof(ListNode*) * new_capacity);
@@ -72,7 +70,6 @@ void rehash(HashMap *hash_map) {
 }
 
 /*###################### Functions ###################### */
-
 void put_entry(HashMap *hash_map, Contact *value) {
     if (hash_map == NULL || value == NULL) {
         return;

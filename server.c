@@ -75,7 +75,6 @@ int main() {
 }
 
 void *thread_loop(void *args) {
-
     // Block SIGINT signal for threads
     sigset_t set;
     sigemptyset(&set);
@@ -87,7 +86,6 @@ void *thread_loop(void *args) {
     FD_ZERO(&worker_set);
 
     while (!shutdown_flag) {
-
         int *client_socket = NULL;
 
         pthread_mutex_lock(&ready_queue_mutex);
