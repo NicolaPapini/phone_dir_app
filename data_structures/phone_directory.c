@@ -113,7 +113,9 @@ Status delete_contact(PhoneDirectory *phone_dir, char *name, char *surname, char
     }
 
     free(standardized_name);
-
+    if (!current->is_end_of_word) {
+        return RECORD_NOT_FOUND;
+    }
     // Remove the contact from the linked list
     ListNode *temp = current->head;
     ListNode *prev = NULL;

@@ -109,14 +109,14 @@ void *thread_loop(void *args) {
             if (FD_ISSET(i, &ready_set)) {
                 int *socket = (int*) malloc(sizeof(int));
                 *socket = i;
-                printf("Handling connection %d in thread %p\n", i, pthread_self());
+                printf("Handling connection %d in thread %lu\n", i, pthread_self());
                 if (handle_connection(*socket, phone_directory) <= 0) {
                     pthread_mutex_lock(&closeable_queue_mutex);
                     enqueue(closeable_queue, socket);
                     pthread_mutex_unlock(&closeable_queue_mutex);
                     FD_CLR(*socket, &worker_set);
                     set_size--;
-                    printf("Thread %p finished handling connection %d\n", pthread_self(), *socket);
+                    printf("Thread %lu finished handling connection %d\n", pthread_self(), *socket);
                 }
             }
         }
