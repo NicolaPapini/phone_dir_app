@@ -20,5 +20,6 @@ client: $(CLIENT_SOURCES)
 
 clean:
 	rm -f server client
+	rm phone_directory.txt
 
 .PHONY: all clean
