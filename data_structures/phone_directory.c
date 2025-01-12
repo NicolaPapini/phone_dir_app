@@ -196,6 +196,9 @@ Status update_contact_number(PhoneDirectory *phone_directory, char *phone_number
         new_phone_number == NULL) {
         return INVALID_INPUT;
     }
+    if (get(phone_directory->hash_map, new_phone_number) != NULL) {
+        return RECORD_ALREADY_EXISTS;
+    }
 
     Contact *contact = get(phone_directory->hash_map, phone_number);
     if (contact == NULL) {
